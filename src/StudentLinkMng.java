@@ -1,179 +1,130 @@
-import java.util.Scanner;
-
-public class StudentLinkMng {
-	public static void main(String args[]){
-		Scanner stdin = new Scanner(System.in);
-		StudentLinkedList L = new StudentLinkedList();
-		char Choice='0';
-		String strSTNO="";
-		String strSTNAME="";
-		String strSTDEPT="";
-		int intSTAGE=0;
-		String strSTCITY="";
-		
-		while(true)
-		{
-		System.out.println("=========== menu =========\r\n" + 
-				"1. 학생 데이터 입력\r\n" + 
-				"2. 학생 데이터 출력\r\n" + 
-				"3. 학생 명수 출력\r\n" + 
-				"4. 현재 노드 개수 출력\r\n" + 
-				"==========================\r\n" + 
-				"번호 선택 : ");
-		
-		Choice = stdin.next().charAt(0);
-		
-		switch(Choice) {
-			case '1':
-				System.out.printf("%s","학번 입력 : ");
-				strSTNO = stdin.next();
-				System.out.printf("%s","이름 입력 : ");
-				strSTNAME = stdin.next();
-				System.out.printf("%s","부서 입력 : ");
-				strSTDEPT = stdin.next();
-				System.out.printf("%s","나이 입력 : ");
-				intSTAGE = stdin.nextInt();
-				System.out.printf("%s","거주지 입력 : ");
-				strSTCITY = stdin.next();
-				L.insertLastNode(strSTNO,strSTNAME,strSTDEPT,intSTAGE,strSTCITY);
-				break;
-			case '2':
-				L.printList();
-				break;
-			case '3':
-				L.printStudentNum();
-				break;
-			case '4':
-				L.printStudenNodeNum();
-				break;
-			default:
-				System.out.println("잘못된 입력값입니다. 다시 입력 하세요");
-		}
-		}
-	}
+public class PolynomialTest {
+    public static void main(String[] args) {
+        //다항식 A 만들기
+        Polynomial A = new Polynomial();
+        A.insertNode(4, 3);
+        A.insertNode(3, 2);
+        A.insertNode(5, 1);
+        A.print();
+ 
+        //다항식 B 만들기
+        Polynomial B = new Polynomial();
+        B.insertNode(3, 4);
+        B.insertNode(1, 3);
+        B.insertNode(2, 1);
+        B.insertNode(1, 0);
+        B.print();
+ 
+        Polynomial C = AddPolynomial(A, B);
+        C.print();
+    }
+ 
+    static Polynomial AddPolynomial(Polynomial A, Polynomial B){
+        ListNode a = A.head;
+        ListNode b = B.head;
+        Polynomial C = new Polynomial();
+ 
+        //A나 B 둘 중 하나가 모든 항에 대해 덧셈이 끝나는 경우 while 종료
+        while(a!=null && b!=null){
+            //B의 지수가 A의 지수보다 큰 경우
+            if(a.expo<b.expo){
+                C.insertNode(b.coef, b.expo);
+                b = b.next;
+            }
+            //A의 지수가 B의 지수보다 큰 경우
+            else if(a.expo>b.expo){
+                C.insertNode(a.coef, a.expo);
+                a = a.next;
+            }
+            //A의 지수와 B의 지수가 같은 경우
+            else{
+                C.insertNode(a.coef+b.coef, a.expo);
+                a = a.next;
+                b = b.next;
+            }
+        }    
+        
+        //A에 항이 남아 있는 경우 C에 추가
+        while(a!=null){
+            C.insertNode(a.coef, a.expo);
+            a = a.next;
+        }
+        
+        //B에 항이 남아 잇는 경우 B에 추가
+        while(b!=null){
+            C.insertNode(b.coef, b.expo);
+            b = b.next;
+        }
+        
+        return C;
+    }
 }
 
 
-class StudentDataNode{
-	public String STNO;
-	public String STNAME;
-	public String STDEPT;
-	public int STAGE;
-	public String STCITY;
-	public StudentDataNode link;
-	
-	public StudentDataNode() {
-		this.STNO = null;
-		this.STNAME = null;
-		this.STDEPT = null;
-		this.STAGE = 0;
-		this.STCITY = null;
-		this.link = null;
-	}
-	
-	public StudentDataNode(String STNO,String STNAME,String STDEPT,int STAGE,String STCITY){
-		this.STNO = STNO;
-		this.STNAME = STNAME;
-		this.STDEPT = STDEPT;
-		this.STAGE = STAGE;
-		this.STCITY = STCITY;
-		this.link = null;
-	}
-	
-	public StudentDataNode(String STNO,String STNAME,String STDEPT,int STAGE,String STCITY,StudentDataNode link){
-		this.STNO = STNO;
-		this.STNAME = STNAME;
-		this.STDEPT = STDEPT;
-		this.STAGE = STAGE;
-		this.STCITY = STCITY;
-		this.link = link;
-	}
-	public String getSTNO(){
-		return this.STNO ;
-	}
-	public String getSTNAME(){
-		return this.STNAME ;
-	}
-	public String getSTDEPT(){
-		return this.STDEPT ;
-	}
-	public int getSTAGE(){
-		return this.STAGE ;
-	}
-	public String getSTCITY(){
-		return this.STCITY ;
-	}
+
+
+public class ListNode {
+    int coef;
+    int expo;
+    ListNode next;
+    
+    public ListNode() {
+        next = null;
+    }
+    
+    public ListNode(int coef, int expo){
+        this.coef = coef;
+        this.expo = expo;
+        this.next = null;
+    }
+    
+    public ListNode(int coef, int expo, ListNode next){
+        this.coef = coef;
+        this.expo = expo;
+        this.next = next;
+    }
+    
+    public int getCoef() {
+        return this.coef;
+    }
+    
+    public int getExpo() {
+        return this.expo;
+    }
 }
 
-class StudentLinkedList{
-	private StudentDataNode head;
-	public StudentLinkedList(){
-		head = null;
-	}
-	public void insertLastNode(String STNO,String STNAME,String STDEPT,int STAGE,String STCITY){
-		StudentDataNode newNode = new StudentDataNode(STNO,STNAME,STDEPT,STAGE,STCITY);
-		if(head == null){
-			this.head = newNode;
-		}
-		else{
-			StudentDataNode temp = head;
-			while(temp.link != null) temp = temp.link;
-			temp.link = newNode;
-		}
-	}
-	public void printList(){
-		StudentDataNode temp = this.head;
-		System.out.printf("%s\t%s\t%s\t%s\t%s\n","STNO","STNAME","STDEPT","STAGE","STCITY");
-		while(temp != null){
-			System.out.printf("%s\t",temp.getSTNO());
-			System.out.printf("%s\t",temp.getSTNAME());
-			System.out.printf("%s\t",temp.getSTDEPT());
-			System.out.printf("%d\t",temp.getSTAGE());
-			System.out.printf(temp.getSTCITY());
-			temp = temp.link;
-			if(temp != null){
-				System.out.printf("\n");
-		
-			}			
-		}
-		System.out.printf("\n");
-	}
-	
-	public void printStudentNum(){
-		StudentDataNode temp = this.head;
-		int StudentNum=1;
-		while(temp != null){
-			StudentNum+=1;
-			temp = temp.link;
-			if(temp != null){
-				System.out.printf("학생의 수 : %d",StudentNum);
-				System.out.printf("\n");
-			}			
-		}
-		if(StudentNum == 1)
-		{
-			System.out.printf("학생의 수 : %d",1);
-		}
-		System.out.printf("\n");
-	}
-	
-	public void printStudenNodeNum(){
-		StudentDataNode temp = this.head;
-		int StudentNodeNum=1;
-
-		while(temp != null){
-			StudentNodeNum+=1;
-			temp = temp.link;
-			if(temp != null){
-				System.out.printf("노드의 수 : %d",StudentNodeNum);
-				
-			}			
-		}
-		if(StudentNodeNum == 1)
-		{
-			System.out.printf("노드의 수 : %d",1);
-		}
-		System.out.printf("\n");
-	}
+public class Polynomial {
+    ListNode head;
+    
+    public Polynomial() {
+        head = null;
+    }
+    
+    public void insertNode(int coef, int expo){
+        ListNode node = new ListNode(coef, expo);
+        if(head==null){
+            head = node;
+        }else{
+            ListNode current = head;
+            while(current.next!=null){
+                current = current.next;
+            }
+            current.next = node;
+        }
+    }
+    
+    public void print(){
+        if(head==null){
+            System.out.println("출력할 노드가 존재하지 않습니다.");
+        }else{
+            ListNode current = head;
+            while(current.next!=null){
+                System.out.print(current.coef + "X^" + current.expo + " + ");
+                current = current.next;
+            }
+            System.out.print(current.coef + "X^" + current.expo);
+            System.out.println();
+        }
+    }
 }
 
